@@ -59,7 +59,6 @@ const handleDialogOpen = (isOpen) => {
     axios
       .get(props.url)
       .then(({ data }) => {
-        console.log("🪲 data:", data);
         pokemon.value = data ?? null;
         isLoading.value = false;
       })

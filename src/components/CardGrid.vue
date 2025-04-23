@@ -1,8 +1,13 @@
 <template>
   <v-container>
+    <v-pagination
+      v-model="page"
+      :length="totalPages"
+      total-visible="5"
+    ></v-pagination>
     <v-row class="justify-center">
       <v-col
-        v-for="(p, index) in isLoading ? 12 : pokeList"
+        v-for="(p, index) in isLoading ? 24 : pokeList"
         :key="index"
         cols="12"
         sm="6"
@@ -10,7 +15,7 @@
         lg="3"
       >
         <v-skeleton-loader
-          type="card"
+          type="list-item"
           :loading="isLoading"
           class="justify-center"
         >
@@ -31,24 +36,31 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, watch, onMounted } from "vue";
 import axios from "axios";
 import { ENDPOINT, LIMIT } from "@/constants";
 import { capitalizeStr } from "@/utils";
 
 const isLoading = ref(true);
 const showSnackbar = ref(false);
-const offset = ref(0);
+const page = ref(0);
+const totalPages = ref(1);
 const pokeList = ref([]);
 
 onMounted(() => {
+  page.value = 1;
+});
+
+watch(page, (newPage) => {
   isLoading.value = true;
-  const url = `${ENDPOINT.POKEMON}?limit=${LIMIT}&offset=${offset.value}`;
+  const offset = (newPage - 1) * LIMIT;
+  const url = `${ENDPOINT.POKEMON}?limit=${LIMIT}&offset=${offset}`;
   axios
     .get(url)
     .then(({ data }) => {
       pokeList.value = data?.results ?? [];
       isLoading.value = false;
+      totalPages.value = Math.ceil(data.count / LIMIT);
     })
     .catch((error) => {
       console.error("🚩 Error getting list of Pokemon:", error);
