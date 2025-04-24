@@ -11,10 +11,14 @@
           :src="pokemon?.sprites?.front_default"
           position="top center"
         />
-        <v-card-title>{{ capitalizeStr(pokemon?.name) }}</v-card-title>
+        <v-card-title class="text-capitalize">{{ pokemon?.name }}</v-card-title>
         <v-card-subtitle>
-          <span v-for="{ type, slot } in pokemon?.types" :key="slot">
-            {{ capitalizeStr(type.name) }}
+          <span
+            class="text-capitalize"
+            v-for="{ type, slot } in pokemon?.types"
+            :key="slot"
+          >
+            {{ type.name }}
             <span v-if="slot < pokemon?.types.length">• </span>
           </span>
         </v-card-subtitle>
@@ -24,10 +28,11 @@
               <v-list-item v-bind="props" title="Abilities"></v-list-item>
             </template>
             <v-list-item
+              class="text-capitalize"
               v-for="{ ability, is_hidden, slot } in pokemon?.abilities"
               :key="slot"
             >
-              {{ capitalizeStr(ability.name) }}
+              {{ ability.name }}
               {{ is_hidden ? "(Hidden)" : "" }}
             </v-list-item>
           </v-list-group>
@@ -43,11 +48,11 @@
 <script setup>
 import { ref } from "vue";
 import axios from "axios";
-import { capitalizeStr } from "@/utils";
 
 const props = defineProps({
   url: String,
   name: String,
+  setShowSnackbar: Function,
 });
 
 const pokemon = ref(null);
@@ -62,8 +67,9 @@ const handleDialogOpen = (isOpen) => {
         pokemon.value = data ?? null;
         isLoading.value = false;
       })
-      .catch((error) => {
-        console.error("🚩 Error getting Pokemon:", error);
+      .catch(({ response }) => {
+        console.error("🚩 Error getting Pokemon:", response);
+        props.setShowSnackbar(true, response);
       });
   }
 };
