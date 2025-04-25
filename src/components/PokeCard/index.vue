@@ -15,27 +15,21 @@
         <v-card-subtitle>
           <span
             class="text-capitalize"
-            v-for="{ type, slot } in pokemon?.types"
-            :key="slot"
+            v-for="({ type }, index) in pokemon?.types"
+            :key="index"
           >
             {{ type.name }}
-            <span v-if="slot < pokemon?.types.length">• </span>
+            <span v-if="index < pokemon?.types.length - 1">• </span>
           </span>
         </v-card-subtitle>
         <v-list density="compact">
-          <v-list-group value="Abilities">
-            <template #activator="{ props }">
-              <v-list-item v-bind="props" title="Abilities"></v-list-item>
-            </template>
-            <v-list-item
-              class="text-capitalize"
-              v-for="{ ability, is_hidden, slot } in pokemon?.abilities"
-              :key="slot"
-            >
-              {{ ability.name }}
-              {{ is_hidden ? "(Hidden)" : "" }}
-            </v-list-item>
-          </v-list-group>
+          <FeatureList
+            v-for="{ listKey, mainKey, title, subkey } in features"
+            :list="pokemon?.[listKey]"
+            :mainKey="mainKey"
+            :title="title"
+            :subkey="subkey"
+          />
         </v-list>
         <v-card-actions>
           <v-btn @click="isActive.value = false">Close</v-btn>
@@ -54,6 +48,11 @@ const props = defineProps({
   name: String,
   setShowSnackbar: Function,
 });
+
+const features = [
+  { listKey: "abilities", mainKey: "ability", title: "Abilities" },
+  { listKey: "moves", mainKey: "move", title: "Moves" },
+];
 
 const pokemon = ref(null);
 const isLoading = ref(true);

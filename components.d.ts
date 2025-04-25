@@ -8,10 +8,10 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    AppFooter: typeof import('./src/components/AppFooter.vue')['default']
-    CardGrid: typeof import('./src/components/CardGrid.vue')['default']
-    HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
-    PokeCard: typeof import('./src/components/PokeCard.vue')['default']
+    CardGrid: typeof import('./src/components/CardGrid/index.vue')['default']
+    FeatureList: typeof import('./src/components/PokeCard/FeatureList/index.vue')['default']
+    ListGroup: typeof import('./src/components/PokeCard/ListGroup/index.vue')['default']
+    PokeCard: typeof import('./src/components/PokeCard/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }
