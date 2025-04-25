@@ -26,6 +26,4 @@ const props = defineProps({
     default: null,
   },
 });
-
-console.log("🪲 props:", props);
 </script>
